@@ -1,57 +1,42 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <!-- Teker ölçüleri (metre) -->
-  <xacro:property name="wheel_radius" value="0.035"/>   <!-- 3.5 cm -->
-  <xacro:property name="wheel_width"  value="0.039"/>   <!-- 3.9 cm -->
+  <!-- LEFT WHEEL -->
+  <link name="left_wheel_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="0.035" length="0.030"/>
+      </geometry>
+      <!-- SADECE REFERANS -->
+      <material name="wheel_red"/>
+    </visual>
+  </link>
 
-  <!-- Sol teker macro -->
-  <xacro:macro name="left_wheel">
+  <joint name="left_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="left_wheel_link"/>
+    <origin xyz="0 0.095 -0.028"/>
+    <axis xyz="1 0 0"/>
+  </joint>
 
-    <!-- Sol teker link -->
-    <link name="left_wheel_link">
-      <visual>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <geometry>
-          <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
-        </geometry>
-        <material name="black">
-          <color rgba="0.05 0.05 0.05 1.0"/>
-        </material>
-      </visual>
+  <!-- RIGHT WHEEL -->
+  <link name="right_wheel_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="0.035" length="0.030"/>
+      </geometry>
+      <!-- SADECE REFERANS -->
+      <material name="wheel_red"/>
+    </visual>
+  </link>
 
-      <collision>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <geometry>
-          <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
-        </geometry>
-      </collision>
-
-      <inertial>
-        <mass value="0.5"/>
-        <origin xyz="0 0 0"/>
-        <inertia
-          ixx="0.001" ixy="0.0" ixz="0.0"
-          iyy="0.001" iyz="0.0"
-          izz="0.001"/>
-      </inertial>
-    </link>
-
-    <!-- Sol teker joint -->
-    <joint name="left_wheel_joint" type="continuous">
-      <parent link="base_link"/>
-      <child link="left_wheel_link"/>
-
-      <!-- Konum:
-           X = 0 (şase ortası)
-           Y = +0.09 m (18 cm / 2)
-           Z = 0.035 m (teker yarıçapı) -->
-      <origin xyz="0 0.09 0.035" rpy="0 0 0"/>
-
-      <!-- Teker X ekseni etrafında döner -->
-      <axis xyz="1 0 0"/>
-    </joint>
-
-  </xacro:macro>
+  <joint name="right_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="right_wheel_link"/>
+    <origin xyz="0 -0.095 -0.028"/>
+    <axis xyz="1 0 0"/>
+  </joint>
 
 </robot>

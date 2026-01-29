@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ===================== -->
+  <!-- RIGHT CASTER -->
+  <!-- ===================== -->
+  <link name="right_caster_link">
+    <visual>
+      <geometry>
+        <sphere radius="0.015"/>
+      </geometry>
+      <!-- MATERIAL REFERANSI -->
+      <material name="caster_gray"/>
+    </visual>
+
+    <collision>
+      <geometry>
+        <sphere radius="0.015"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="right_caster_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="right_caster_link"/>
+    <origin xyz="0.08 0.0 -0.045"/>
+  </joint>
+
+  <!-- ===================== -->
+  <!-- LEFT CASTER -->
+  <!-- ===================== -->
+  <link name="left_caster_link">
+    <visual>
+      <geometry>
+        <sphere radius="0.015"/>
+      </geometry>
+      <!-- MATERIAL REFERANSI -->
+      <material name="caster_gray"/>
+    </visual>
+
+    <collision>
+      <geometry>
+        <sphere radius="0.015"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="left_caster_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="left_caster_link"/>
+    <origin xyz="-0.08 0.0 -0.045"/>
+  </joint>
+
+</robot>
