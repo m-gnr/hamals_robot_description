@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ===================== -->
+  <!-- LIDAR MOUNT -->
+  <!-- ===================== -->
+  <link name="lidar_mount_link">
+    <visual>
+      <geometry>
+        <box size="0.06 0.06 0.015"/>
+      </geometry>
+      <!-- MATERIAL REFERANSI -->
+      <material name="lidar_mount_gray"/>
+    </visual>
+
+    <collision>
+      <geometry>
+        <box size="0.06 0.06 0.015"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="lidar_mount_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="lidar_mount_link"/>
+    <origin xyz="0 0 0.0525"/>
+  </joint>
+
+  <!-- ===================== -->
+  <!-- LIDAR -->
+  <!-- ===================== -->
+  <link name="lidar_link">
+    <visual>
+      <geometry>
+        <cylinder radius="0.031" length="0.03"/>
+      </geometry>
+      <!-- MATERIAL REFERANSI -->
+      <material name="lidar_black"/>
+    </visual>
+  </link>
+
+  <joint name="lidar_joint" type="fixed">
+    <parent link="lidar_mount_link"/>
+    <child link="lidar_link"/>
+    <origin xyz="0 0 0.015"/>
+  </joint>
+
+</robot>

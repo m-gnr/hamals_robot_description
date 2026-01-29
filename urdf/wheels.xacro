@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- LEFT WHEEL -->
+  <link name="left_wheel_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="0.035" length="0.030"/>
+      </geometry>
+      <!-- SADECE REFERANS -->
+      <material name="wheel_red"/>
+    </visual>
+  </link>
+
+  <joint name="left_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="left_wheel_link"/>
+    <origin xyz="0 0.095 -0.028"/>
+    <axis xyz="1 0 0"/>
+  </joint>
+
+  <!-- RIGHT WHEEL -->
+  <link name="right_wheel_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="0.035" length="0.030"/>
+      </geometry>
+      <!-- SADECE REFERANS -->
+      <material name="wheel_red"/>
+    </visual>
+  </link>
+
+  <joint name="right_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="right_wheel_link"/>
+    <origin xyz="0 -0.095 -0.028"/>
+    <axis xyz="1 0 0"/>
+  </joint>
+
+</robot>
