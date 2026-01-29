@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="hamals_robot">
+
+  <!-- ===================== -->
+  <!-- CHASSIS PROPERTIES -->
+  <!-- ===================== -->
+  <xacro:property name="chassis_length" value="0.22"/>
+  <xacro:property name="chassis_width"  value="0.156"/>
+  <xacro:property name="chassis_height" value="0.09"/>
+
+  <!-- ===================== -->
+  <!-- BASE LINK -->
+  <!-- ===================== -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+      </geometry>
+      <material name="navy">
+        <color rgba="0.05 0.1 0.4 1.0"/>
+      </material>
+    </visual>
+
+    <collision>
+      <geometry>
+        <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="5.0"/>
+      <inertia
+        ixx="0.02" ixy="0" ixz="0"
+        iyy="0.02" iyz="0"
+        izz="0.02"/>
+    </inertial>
+  </link>
+
+  <!-- ===================== -->
+  <!-- LEFT WHEEL -->
+  <!-- ===================== -->
+  <link name="left_wheel_link">
+
+    <!-- 🔴 LASTİK -->
+    <visual>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry>
+        <!-- biraz daha kısa -->
+        <cylinder radius="0.035" length="0.030"/>
+      </geometry>
+      <material name="red_tire">
+        <color rgba="0.85 0.0 0.0 1.0"/>
+      </material>
+    </visual>
+
+    <!-- ⚪ JANT -->
+    <visual>
+      <!-- çok az dışarı taşır -->
+      <origin xyz="0 0 0.002" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="0.020" length="0.040"/>
+      </geometry>
+      <material name="white_rim">
+        <color rgba="1.0 1.0 1.0 1.0"/>
+      </material>
+    </visual>
+
+    <!-- collision sadece lastik -->
+    <collision>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="0.035" length="0.039"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- LEFT WHEEL JOINT -->
+  <joint name="left_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="left_wheel_link"/>
+    <origin xyz="0 0.095 -0.028"/>
+    <axis xyz="1 0 0"/>
+  </joint>
+
+  <!-- ===================== -->
+  <!-- RIGHT WHEEL -->
+  <!-- ===================== -->
+  <link name="right_wheel_link">
+
+    <!-- 🔴 LASTİK -->
+    <visual>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="0.035" length="0.030"/>
+      </geometry>
+      <material name="red_tire">
+        <color rgba="0.85 0.0 0.0 1.0"/>
+      </material>
+    </visual>
+
+    <!-- ⚪ JANT -->
+    <visual>
+      <origin xyz="0 0 0.002" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="0.020" length="0.040"/>
+      </geometry>
+      <material name="white_rim">
+        <color rgba="1.0 1.0 1.0 1.0"/>
+      </material>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="0.035" length="0.039"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- RIGHT WHEEL JOINT -->
+  <joint name="right_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="right_wheel_link"/>
+    <origin xyz="0 -0.095 -0.028"/>
+    <axis xyz="1 0 0"/>
+  </joint>
+
+</robot>
