@@ -1,54 +1,63 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <!-- ===================== -->
-  <!-- RIGHT CASTER -->
-  <!-- ===================== -->
-  <link name="right_caster_link">
+  <xacro:property name="dims"
+    value="${xacro.load_yaml('$(find hamals_robot_description)/config/robot_dimensions.yaml')}" />
+
+  <!-- Drive wheel geometry (AUTHORITATIVE ground reference) -->
+  <xacro:property name="wheel_radius"
+    value="${dims['wheels']['radius']}"/>
+
+  <xacro:property name="wheel_center_z"
+    value="${dims['wheels']['z_offset'] * -1.0}"/>
+
+  <!-- Caster geometry -->
+  <xacro:property name="caster_radius"
+    value="${dims['casters']['radius']}"/>
+
+  <xacro:property name="front_x"
+    value="${dims['casters']['front_x']}"/>
+  <xacro:property name="rear_x"
+    value="${dims['casters']['rear_x']}"/>
+
+  <!-- Ground plane from wheel -->
+  <xacro:property name="ground_z"
+    value="${wheel_center_z - wheel_radius}"/>
+
+  <!-- Caster center exactly touching ground -->
+  <xacro:property name="caster_z"
+    value="${ground_z + caster_radius}"/>
+
+  <!-- FRONT CASTER -->
+  <link name="front_caster_link">
     <visual>
       <geometry>
-        <sphere radius="0.015"/>
+        <sphere radius="${caster_radius}"/>
       </geometry>
-      <!-- MATERIAL REFERANSI -->
       <material name="caster_gray"/>
     </visual>
-
-    <collision>
-      <geometry>
-        <sphere radius="0.015"/>
-      </geometry>
-    </collision>
   </link>
 
-  <joint name="right_caster_joint" type="fixed">
+  <joint name="front_caster_joint" type="fixed">
     <parent link="base_link"/>
-    <child link="right_caster_link"/>
-    <origin xyz="0.08 0.0 -0.045"/>
+    <child link="front_caster_link"/>
+    <origin xyz="${front_x} 0 ${caster_z}"/>
   </joint>
 
-  <!-- ===================== -->
-  <!-- LEFT CASTER -->
-  <!-- ===================== -->
-  <link name="left_caster_link">
+  <!-- REAR CASTER -->
+  <link name="rear_caster_link">
     <visual>
       <geometry>
-        <sphere radius="0.015"/>
+        <sphere radius="${caster_radius}"/>
       </geometry>
-      <!-- MATERIAL REFERANSI -->
       <material name="caster_gray"/>
     </visual>
-
-    <collision>
-      <geometry>
-        <sphere radius="0.015"/>
-      </geometry>
-    </collision>
   </link>
 
-  <joint name="left_caster_joint" type="fixed">
+  <joint name="rear_caster_joint" type="fixed">
     <parent link="base_link"/>
-    <child link="left_caster_link"/>
-    <origin xyz="-0.08 0.0 -0.045"/>
+    <child link="rear_caster_link"/>
+    <origin xyz="${rear_x} 0 ${caster_z}"/>
   </joint>
 
 </robot>
