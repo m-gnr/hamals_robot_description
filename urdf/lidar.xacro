@@ -1,48 +1,85 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <!-- ===================== -->
-  <!-- LIDAR MOUNT -->
-  <!-- ===================== -->
+  <!-- ================================================= -->
+  <!-- Load robot dimensions from YAML                  -->
+  <!-- ================================================= -->
+  <xacro:property name="dims"
+    value="${xacro.load_yaml('$(find hamals_robot_description)/config/robot_dimensions.yaml')}" />
+
+  <!-- Base frame height -->
+  <xacro:property name="base_link_z"
+    value="${dims['base_frames']['base_link_z']}"/>
+
+  <!-- Lidar parameters -->
+  <xacro:property name="lidar_height"
+    value="${dims['lidar']['height']}"/>
+
+  <xacro:property name="lidar_offset_x"
+    value="${dims['lidar']['offset']['x']}"/>
+  <xacro:property name="lidar_offset_y"
+    value="${dims['lidar']['offset']['y']}"/>
+
+  <!-- Lidar geometry -->
+  <xacro:property name="lidar_body_length" value="0.03"/>
+  <xacro:property name="lidar_body_radius" value="0.031"/>
+
+  <!-- Mount geometry -->
+  <xacro:property name="mount_thickness" value="0.015"/>
+
+  <xacro:property name="mount_gap"
+    value="${dims['lidar']['mount']['gap']}"/>
+
+  <!-- ================================================= -->
+  <!-- LIDAR LINK (REFERENCE SENSOR)                     -->
+  <!-- ================================================= -->
+  <link name="lidar_link">
+    <visual>
+      <geometry>
+        <cylinder radius="${lidar_body_radius}"
+                  length="${lidar_body_length}"/>
+      </geometry>
+      <material name="lidar_black"/>
+    </visual>
+  </link>
+
+  <!-- Lidar center placed exactly at lidar_height -->
+  <xacro:property name="lidar_z"
+    value="${lidar_height - base_link_z}"/>
+
+  <joint name="lidar_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="lidar_link"/>
+    <origin
+      xyz="${lidar_offset_x} ${lidar_offset_y} ${lidar_z}"/>
+  </joint>
+
+  <!-- ================================================= -->
+  <!-- LIDAR MOUNT (JUST BELOW LIDAR)                    -->
+  <!-- ================================================= -->
   <link name="lidar_mount_link">
     <visual>
       <geometry>
-        <box size="0.06 0.06 0.015"/>
+        <box size="0.06 0.06 ${mount_thickness}"/>
       </geometry>
-      <!-- MATERIAL REFERANSI -->
       <material name="lidar_mount_gray"/>
     </visual>
 
     <collision>
       <geometry>
-        <box size="0.06 0.06 0.015"/>
+        <box size="0.06 0.06 ${mount_thickness}"/>
       </geometry>
     </collision>
   </link>
 
+
+  <xacro:property name="mount_offset_z"
+    value="${-(lidar_body_length/2.0 + mount_thickness/2.0 - mount_gap)}"/>
+
   <joint name="lidar_mount_joint" type="fixed">
-    <parent link="base_link"/>
+    <parent link="lidar_link"/>
     <child link="lidar_mount_link"/>
-    <origin xyz="0 0 0.0525"/>
-  </joint>
-
-  <!-- ===================== -->
-  <!-- LIDAR -->
-  <!-- ===================== -->
-  <link name="lidar_link">
-    <visual>
-      <geometry>
-        <cylinder radius="0.031" length="0.03"/>
-      </geometry>
-      <!-- MATERIAL REFERANSI -->
-      <material name="lidar_black"/>
-    </visual>
-  </link>
-
-  <joint name="lidar_joint" type="fixed">
-    <parent link="lidar_mount_link"/>
-    <child link="lidar_link"/>
-    <origin xyz="0 0 0.015"/>
+    <origin xyz="0 0 ${mount_offset_z}"/>
   </joint>
 
 </robot>

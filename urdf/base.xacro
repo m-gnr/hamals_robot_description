@@ -1,40 +1,60 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:property name="chassis_length" value="0.22"/>
-  <xacro:property name="chassis_width"  value="0.156"/>
-  <xacro:property name="chassis_height" value="0.09"/>
+  <!-- ================================================= -->
+  <!-- Load robot dimensions from YAML (single source) -->
+  <!-- ================================================= -->
+  <xacro:property name="dims"
+    value="${xacro.load_yaml('$(find hamals_robot_description)/config/robot_dimensions.yaml')}" />
 
+  <!-- Chassis dimensions -->
+  <xacro:property name="chassis_length" value="${dims['robot']['length']}"/>
+  <xacro:property name="chassis_width"  value="${dims['robot']['width']}"/>
+  <xacro:property name="chassis_height" value="${dims['robot']['height']}"/>
+
+  <!-- Base frame height -->
+  <xacro:property name="base_link_z" value="${dims['base_frames']['base_link_z']}"/>
+
+  <!-- ================================================= -->
+  <!-- Base Footprint (2D reference frame)               -->
+  <!-- ================================================= -->
   <link name="base_footprint"/>
 
+  <!-- ================================================= -->
+  <!-- Base Link                                        -->
+  <!-- ================================================= -->
   <joint name="base_footprint_joint" type="fixed">
     <parent link="base_footprint"/>
     <child link="base_link"/>
-    <origin xyz="0 0 0.045"/>
+    <origin xyz="0 0 ${base_link_z}"/>
   </joint>
 
   <link name="base_link">
+
+    <!-- Visual geometry -->
     <visual>
       <geometry>
         <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
       </geometry>
-      <material name="navy">
-        <color rgba="0.05 0.1 0.4 1.0"/>
-      </material>
+      <material name="navy"/>
     </visual>
 
+    <!-- Collision geometry (same as chassis for now) -->
     <collision>
       <geometry>
         <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
       </geometry>
     </collision>
 
+    <!-- Inertial (simple, acceptable for now) -->
     <inertial>
-      <mass value="5.0"/>
-      <inertia ixx="0.02" ixy="0" ixz="0"
-               iyy="0.02" iyz="0"
-               izz="0.02"/>
+      <mass value="${dims['robot']['mass']}"/>
+      <inertia
+        ixx="0.02" ixy="0.0" ixz="0.0"
+        iyy="0.02" iyz="0.0"
+        izz="0.02"/>
     </inertial>
+
   </link>
 
 </robot>

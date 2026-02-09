@@ -1,25 +1,65 @@
 robot:
+  # Chassis dimensions (meters)
   length: 0.22
   width: 0.156
   height: 0.09
 
-wheels:
-  radius: 0.035
-  thickness: 0.039
-  separation: 0.18
+  # Total robot mass (for inertial, optional)
+  mass: 5.0
 
-clearance:
-  front: 0.25
-  side: 0.18
-  rear: 0.20
+
+wheels:
+  # Drive wheels
+  radius: 0.035
+  thickness: 0.03
+
+  # Distance between left and right wheel centers
+  separation: 0.19   # = width + wheel_thickness (0.156 + ~0.03)
+
+  # Vertical position of wheel center relative to ground
+  # (usually exactly the radius)
+  z_offset: 0.035
+
+
+casters:
+  # Passive caster wheels
+  radius: 0.015
+
+  # Longitudinal position relative to base_link center
+  front_x: 0.08
+  rear_x: -0.08
+
+  # Vertical position relative to ground
+  # caster touches ground together with drive wheels
+  z_offset: 0.015
+
 
 lidar:
-  height: 0.0675
-  offset_x: 0.0
-  offset_y: 0.0
+  height: 0.145
+  offset:
+    x: 0.0
+    y: 0.0
+
+  mount:
+    thickness: 0.015
+    gap: 0.005  
+
+base_frames:
+  # base_link height above ground
+  # derived value but stored explicitly for clarity
+  base_link_z: 0.08   # = wheel_radius + chassis_height / 2
+
 
 footprint:
-  - [ 0.11,  0.078]
-  - [ 0.11, -0.078]
-  - [-0.11, -0.078]
-  - [-0.11,  0.078]
+  # Nav2 footprint (counter-clockwise)
+  - [  0.11,  0.078 ]
+  - [  0.11, -0.078 ]
+  - [ -0.11, -0.078 ]
+  - [ -0.11,  0.078 ]
+
+
+clearance:
+  # Used ONLY in Nav2 costmaps (NOT in URDF)
+  front: 0.25
+  side:  0.18
+  rear:  0.20
