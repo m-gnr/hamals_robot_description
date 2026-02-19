@@ -1,70 +1,86 @@
-# Robot Teknik Bilgileri (Özet)
+# HAMAL’S Robot Description
 
-## Genel Yapı
+> URDF/Xacro tabanlı robot model paketi.
+> 
 
-- **Sürüş tipi:** Diferansiyel sürüş
-- **Teker düzeni:**
-    - 2 adet tahrik tekeri (sağ–sol)
-    - 2 adet pasif bilye teker (denge amaçlı)
-- **Referans koordinat sistemi:**
-    - `base_link` → şasenin geometrik merkezi
-    - X: ileri, Y: sol, Z: yukarı
+> Bu paket yalnızca robotun geometrik ve kinematik tanımını içerir
+> 
 
----
+## Paket Amacı
 
-## Tahrik Tekerlekleri
+hamals_robot_description, robotun:
 
-- **Teker yarıçapı:** `3.5 cm`
-- **Teker kalınlığı (yerle temas eden):** `3.9 cm`
-- **Sağ–sol teker merkezleri arası mesafe:** `18.0 cm`
-    - Sol teker: `Y = +9.0 cm`
-    - Sağ teker: `Y = -9.0 cm`
-- **Teker merkezinin yerden yüksekliği:** `3.5 cm`
+- 3D modelini
+- Frame hiyerarşisini
+- Sensör ve teker konumlarını
 
----
+tanımlar.
 
-## Şase (Base)
+Bu paket yalnızca URDF içerir.
 
-- **Şekil:** Dikdörtgen prizma
+Bu paket:
 
-### Üstten Görünüm
+- Odometry hesaplamaz
+- TF publish etmez
+- Sensör verisi üretmez
+- Hareket kontrolü yapmaz
 
-- **Uzunluk (X):** `22.0 cm`
-- **Genişlik (Y):** `15.6 cm`
+## Bağımlılık
 
-### Yandan Görünüm
+Bu paket tek başına çalışmaz.
 
-- **Toplam yükseklik:** `9.0 cm`
-- **Yerden şase altı boşluk:** `~1.8 cm`
-- **Şase merkezinin yerden yüksekliği (yaklaşık):** `6.3 cm`
+Robot, aşağıdaki pakete ihtiyaç duyar:
 
----
+[hamals_localization](https://github.com/m-gnr/hamals_localization)
 
-## LiDAR Sistemi
+Bu paket robotun dünyada hareket etmesini sağlar
 
-### LiDAR Yuvası (3D Print)
+## Mimari
 
-- **Yükseklik:** `1.5 cm`
-- **Genişlik:** `6.0 cm`
-- **Konum:** Şasenin tam merkezi
+```
+          hamals_localization
+                    │
+                TF üretir
+                    │
+                    ▼
+          hamals_robot_description
+                (URDF)
+```
 
-### LiDAR
+Bu paket
 
-- **Yükseklik:** `3.0 cm`
-- **Genişlik:** `6.2 cm`
-- **Konum:**
-    - X = `0`, Y = `0`
-    - Z ≈ `9.3 cm`
-- **Tarama düzlemi:** Şase orijini (X–Y) ile hizalı
+- TF zincirinin alt katmanıdır
+- Görsel ve fiziksel model sağlar
+- Localization katmanına bağımlıdır
 
----
+## Dosya Yapısı
 
-## Bilye Tekerler (Caster Wheels)
+```
+urdf/
+  robot.urdf.xacro   ← Ana giriş dosyası
+  base.xacro
+  wheels.xacro
+  casters.xacro
+  lidar.xacro
+  materials.xacro
 
-- **Adet:** 2
-- **Yarıçap:** `1.5 cm`
-- **Konum:**
-    - Kısa kenarlardan merkeze doğru `3 cm` geride
-    - X ≈ `±8.0 cm`
-    - Sağ–sol simetrik
-- **Görev:** Denge, hareket iletmez
+config/
+  robot_dimensions.yaml
+```
+
+## Frame Yapısı
+
+```
+base_footprint
+   ↓
+base_link
+   ↓
+wheels / lidar / casters
+```
+
+## Tasarım Prensibi
+
+- Modüler
+- Config-driven
+- Localization’dan ayrılmış
+- Navigation-ready
