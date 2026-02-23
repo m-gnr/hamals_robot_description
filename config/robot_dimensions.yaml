@@ -35,7 +35,7 @@ casters:
 
 
 lidar:
-  height: 0.145
+  height: 0.13 # 0.145
   offset:
     x: 0.0
     y: 0.0
@@ -47,7 +47,7 @@ lidar:
 base_frames:
   # base_link height above ground
   # derived value but stored explicitly for clarity
-  base_link_z: 0.08   # = wheel_radius + chassis_height / 2
+  base_link_z: 0.07   # = wheel_radius + chassis_height / 2
 
 
 footprint:
@@ -60,6 +60,6 @@ footprint:
 
 clearance:
   # Used ONLY in Nav2 costmaps (NOT in URDF)
-  front: 0.25
-  side:  0.18
-  rear:  0.20
+  front: 0.18
+  side:  0.10
+  rear:  0.15
