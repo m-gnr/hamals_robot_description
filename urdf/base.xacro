@@ -1,60 +1,49 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <!-- ================================================= -->
-  <!-- Load robot dimensions from YAML (single source) -->
-  <!-- ================================================= -->
-  <xacro:property name="dims"
-    value="${xacro.load_yaml('$(find hamals_robot_description)/config/robot_dimensions.yaml')}" />
+  <xacro:macro name="hamals_base" params="config">
 
-  <!-- Chassis dimensions -->
-  <xacro:property name="chassis_length" value="${dims['robot']['length']}"/>
-  <xacro:property name="chassis_width"  value="${dims['robot']['width']}"/>
-  <xacro:property name="chassis_height" value="${dims['robot']['height']}"/>
+    <!-- Zemindeki ana referans frame -->
+    <link name="${config['robot']['frames']['base_footprint']}"/>
 
-  <!-- Base frame height -->
-  <xacro:property name="base_link_z" value="${dims['base_frames']['base_link_z']}"/>
+    <!-- Gövde merkezi -->
+    <joint name="base_footprint_to_base_link" type="fixed">
+      <parent link="${config['robot']['frames']['base_footprint']}"/>
+      <child link="${config['robot']['frames']['base_link']}"/>
+      <origin
+        xyz="${config['base']['origin']['xyz'][0]} ${config['base']['origin']['xyz'][1]} ${config['base']['origin']['xyz'][2]}"
+        rpy="${config['base']['origin']['rpy'][0]} ${config['base']['origin']['rpy'][1]} ${config['base']['origin']['rpy'][2]}"/>
+    </joint>
 
-  <!-- ================================================= -->
-  <!-- Base Footprint (2D reference frame)               -->
-  <!-- ================================================= -->
-  <link name="base_footprint"/>
+    <link name="${config['robot']['frames']['base_link']}">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${config['base']['length']} ${config['base']['width']} ${config['base']['height']}"/>
+        </geometry>
+        <material name="${config['materials']['base']['name']}"/>
+      </visual>
 
-  <!-- ================================================= -->
-  <!-- Base Link                                        -->
-  <!-- ================================================= -->
-  <joint name="base_footprint_joint" type="fixed">
-    <parent link="base_footprint"/>
-    <child link="base_link"/>
-    <origin xyz="0 0 ${base_link_z}"/>
-  </joint>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${config['base']['collision']['length']} ${config['base']['collision']['width']} ${config['base']['collision']['height']}"/>
+        </geometry>
+      </collision>
 
-  <link name="base_link">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="${config['inertial']['base']['mass']}"/>
+        <inertia
+          ixx="${config['inertial']['base']['ixx']}"
+          ixy="${config['inertial']['base']['ixy']}"
+          ixz="${config['inertial']['base']['ixz']}"
+          iyy="${config['inertial']['base']['iyy']}"
+          iyz="${config['inertial']['base']['iyz']}"
+          izz="${config['inertial']['base']['izz']}"/>
+      </inertial>
+    </link>
 
-    <!-- Visual geometry -->
-    <visual>
-      <geometry>
-        <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
-      </geometry>
-      <material name="navy"/>
-    </visual>
-
-    <!-- Collision geometry (same as chassis for now) -->
-    <collision>
-      <geometry>
-        <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
-      </geometry>
-    </collision>
-
-    <!-- Inertial (simple, acceptable for now) -->
-    <inertial>
-      <mass value="${dims['robot']['mass']}"/>
-      <inertia
-        ixx="0.02" ixy="0.0" ixz="0.0"
-        iyy="0.02" iyz="0.0"
-        izz="0.02"/>
-    </inertial>
-
-  </link>
+  </xacro:macro>
 
 </robot>
