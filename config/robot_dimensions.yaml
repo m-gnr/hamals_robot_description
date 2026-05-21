@@ -100,7 +100,7 @@ forklift:
 
     # forklift_mast_link'e göre tanımlıdır.
     origin:
-      xyz: [0.03, 0.0, -0.18]
+      xyz: [0.03, 0.0, -0.375]
       rpy: [0.0, 0.0, 0.0]
 
     joint:

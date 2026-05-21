@@ -1,8 +1,8 @@
 from launch import LaunchDescription
+from launch.substitutions import Command, PathJoinSubstitution
 from launch_ros.actions import Node
-from launch.substitutions import Command
 from launch_ros.substitutions import FindPackageShare
-from launch.substitutions import PathJoinSubstitution
+from launch_ros.parameter_descriptions import ParameterValue
 
 
 def generate_launch_description():
@@ -14,23 +14,33 @@ def generate_launch_description():
         "hamals_robot.urdf.xacro"
     ])
 
-    robot_description = {
-        "robot_description": Command([
+    robot_description_content = ParameterValue(
+        Command([
             "xacro ",
             robot_description_file
-        ])
-    }
+        ]),
+        value_type=str
+    )
 
     robot_state_publisher = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
-        parameters=[robot_description],
+        parameters=[
+            {
+                "robot_description": robot_description_content
+            }
+        ],
         output="screen"
     )
 
     joint_state_publisher_gui = Node(
         package="joint_state_publisher_gui",
         executable="joint_state_publisher_gui",
+        parameters=[
+            {
+                "robot_description": robot_description_content
+            }
+        ],
         output="screen"
     )
 
