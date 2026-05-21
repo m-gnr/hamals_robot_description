@@ -14,7 +14,7 @@ def generate_launch_description():
         "hamals_robot.urdf.xacro"
     ])
 
-    robot_description_content = ParameterValue(
+    robot_description = ParameterValue(
         Command([
             "xacro ",
             robot_description_file
@@ -27,7 +27,8 @@ def generate_launch_description():
         executable="robot_state_publisher",
         parameters=[
             {
-                "robot_description": robot_description_content
+                "robot_description": robot_description,
+                "publish_frequency": 50.0
             }
         ],
         output="screen"
@@ -38,7 +39,7 @@ def generate_launch_description():
         executable="joint_state_publisher_gui",
         parameters=[
             {
-                "robot_description": robot_description_content
+                "robot_description": robot_description
             }
         ],
         output="screen"
