@@ -5,8 +5,12 @@
 
   <xacro:include filename="$(find hamals_robot_description)/urdf/materials.xacro"/>
   <xacro:include filename="$(find hamals_robot_description)/urdf/base.xacro"/>
+  <xacro:include filename="$(find hamals_robot_description)/urdf/wheels.xacro"/>
+  <xacro:include filename="$(find hamals_robot_description)/urdf/casters.xacro"/>
 
   <xacro:hamals_materials config="${config}"/>
   <xacro:hamals_base config="${config}"/>
+  <xacro:hamals_wheels config="${config}"/>
+  <xacro:hamals_casters config="${config}"/>
 
 </robot>

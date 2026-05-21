@@ -3,7 +3,7 @@ robot:
   type: "forklift_agv"
 
   # Robot koordinat sistemi:
-  # x: ileri yön
+  # x: ileri yön / forklift bıçaklarının baktığı yön
   # y: sağ-sol yön
   # z: yukarı yön
   frames:
@@ -35,14 +35,13 @@ base:
   width: 0.45
   height: 0.35
 
-  # base_link, gövdenin geometrik merkezinde kabul edilir.
+  # base_link, gövdenin geometrik merkezindedir.
   # base_footprint zemindedir.
-  # base_link z yüksekliği, gövde yüksekliğinin yarısıdır.
+  # base_link z yüksekliği = gövde yüksekliği / 2
   origin:
     xyz: [0.0, 0.0, 0.175]
     rpy: [0.0, 0.0, 0.0]
 
-  # Çarpışma geometrisi şimdilik görsel gövde ile aynı tutuldu.
   collision:
     length: 0.70
     width: 0.45
@@ -53,13 +52,12 @@ forklift:
     enabled: true
 
     # Forkliftin ön tarafındaki sabit dikey kaldırma sistemi.
-    # Bu parça base_link'e fixed joint ile bağlanır.
+    # Ön taraf +X yönüdür.
     height: 0.60
     width: 0.36
     depth: 0.05
 
-    # Mast, gövdenin ön yüzüne yakın konumlandırılır.
-    # x = 0.35 değeri, 0.70 m uzunluğundaki gövdenin ön yüzüne denk gelir.
+    # Gövdenin ön yüzü x = +0.35 olduğu için mast burada konumlandırılır.
     origin:
       xyz: [0.35, 0.0, 0.30]
       rpy: [0.0, 0.0, 0.0]
@@ -70,14 +68,13 @@ forklift:
       parent: "base_link"
       child: "forklift_mast_link"
 
-    # Görsel olarak iki dikey kolon kullanılacak.
-    # Kolonlar mast link merkezine göre sağa ve sola yerleştirilir.
     columns:
       left:
         width: 0.06
         depth: 0.05
         height: 0.60
 
+        # +Y robotun soludur.
         origin:
           xyz: [0.0, 0.14, 0.0]
           rpy: [0.0, 0.0, 0.0]
@@ -87,6 +84,7 @@ forklift:
         depth: 0.05
         height: 0.60
 
+        # -Y robotun sağıdır.
         origin:
           xyz: [0.0, -0.14, 0.0]
           rpy: [0.0, 0.0, 0.0]
@@ -95,13 +93,12 @@ forklift:
     enabled: true
 
     # Forklift bıçaklarını taşıyan hareketli kızak.
-    # Bu parça mast üzerinde z ekseninde yukarı-aşağı hareket eder.
+    # Mast üzerinde z ekseninde yukarı-aşağı hareket eder.
     width: 0.36
     depth: 0.04
     height: 0.12
 
-    # Bu origin, forklift_mast_link'e göre tanımlıdır.
-    # Başlangıçta bıçakların yere yakın olması için düşük konumda başlar.
+    # forklift_mast_link'e göre tanımlıdır.
     origin:
       xyz: [0.03, 0.0, -0.18]
       rpy: [0.0, 0.0, 0.0]
@@ -112,36 +109,33 @@ forklift:
       parent: "forklift_mast_link"
       child: "fork_carriage_link"
 
-      # Forklift kaldırma hareketi z eksenindedir.
+      # Yukarı-aşağı kaldırma hareketi.
       axis: [0.0, 0.0, 1.0]
 
       limit:
-        # Bıçakların en alt konumdan itibaren minimum hareket miktarı.
+        # En alt konum.
         lower: 0.0
 
-        # Bıçakların en alt konumdan itibaren maksimum yukarı çıkabileceği mesafe.
-        # 0.35 = 35 cm kaldırma yüksekliği.
+        # Maksimum kaldırma yüksekliği.
+        # 0.35 = 35 cm.
         upper: 0.35
 
         # Gazebo / ros2_control için maksimum kuvvet.
         effort: 100.0
 
         # Maksimum kaldırma hızı.
-        # 0.15 = saniyede 15 cm.
         velocity: 0.15
 
   forks:
     enabled: true
 
     # Forklift bıçakları fork_carriage_link'e bağlıdır.
-    # Böylece carriage yukarı kalkınca bıçaklar da birlikte yukarı kalkar.
+    # Carriage yukarı kalkınca bıçaklar da birlikte yukarı kalkar.
     length: 0.45
     width: 0.06
     height: 0.04
 
-    # Bıçakların y eksenindeki konumları gövde genişliğini geçmeyecek şekilde ayarlandı.
-    # Gövde genişliği 0.45 m olduğu için y sınırı yaklaşık ±0.225 m'dir.
-    # Bıçak merkezleri ±0.14 m seçildi.
+    # Bıçaklar +X yönünde ileri doğru uzanır.
     left:
       origin:
         xyz: [0.225, 0.14, -0.08]
@@ -169,14 +163,14 @@ wheels:
     enabled: true
     type: "drive_wheel"
 
-    # Arka sol ana sürüş tekeri.
+    # Sol ana sürüş tekeri.
+    # Bu teker forklift kaldırma mekanizmasına yakın, ön tarafta bulunur.
     radius: 0.075
     width: 0.04
 
-    # Teker gövdenin arka-sol tarafına yerleştirilir.
-    # y değeri gövde genişliğinin biraz dışındadır çünkü teker gövde yanına takılır.
+    # +X ön taraf, +Y sol taraf.
     origin:
-      xyz: [-0.25, 0.245, 0.075]
+      xyz: [0.25, 0.245, -0.12]
       rpy: [1.5708, 0.0, 0.0]
 
     joint:
@@ -185,19 +179,20 @@ wheels:
       parent: "base_link"
       child: "rear_left_wheel_link"
 
-      # Silindir teker rpy ile döndürüldüğü için dönme ekseni z olarak kullanılır.
       axis: [0.0, 0.0, 1.0]
 
   rear_right:
     enabled: true
     type: "drive_wheel"
 
-    # Arka sağ ana sürüş tekeri.
+    # Sağ ana sürüş tekeri.
+    # Bu teker forklift kaldırma mekanizmasına yakın, ön tarafta bulunur.
     radius: 0.075
     width: 0.04
 
+    # +X ön taraf, -Y sağ taraf.
     origin:
-      xyz: [-0.25, -0.245, 0.075]
+      xyz: [0.25, -0.245, -0.12]
       rpy: [1.5708, 0.0, 0.0]
 
     joint:
@@ -212,13 +207,15 @@ caster:
   rear_center:
     enabled: true
 
-    # İki arka tekerin arasında bulunan arka orta destek caster teker.
-    # Şimdilik fixed joint olarak modellenir.
+    # Arka orta denge caster tekeri.
+    # Ana sürüş tekerleri ön/kaldırma mekanizması tarafında,
+    # caster ise robotu dengelemek için arka orta noktadadır.
     radius: 0.04
 
-    # Ana tekerlerden biraz daha arkaya ve tam ortaya yerleştirilir.
+    # Gövdenin arka yüzü x = -0.35.
+    # Caster yarıçapı 0.04 olduğu için merkez yaklaşık -0.39 seçildi.
     origin:
-      xyz: [-0.32, 0.0, 0.04]
+      xyz: [-0.28, 0.0, -0.155]
       rpy: [0.0, 0.0, 0.0]
 
     joint:
@@ -234,10 +231,9 @@ lidar_mount:
   radius: 0.06
   height: 0.04
 
-  # Bu origin base_link'e göredir.
-  # base_link gövde merkezinde olduğu için z = base_height / 2 + mount_height / 2
-  # 0.175 + 0.02 = 0.195 olması fiziksel olarak doğru olur.
-  # Ancak görselde daha yüksek durması için 0.20 seçildi.
+  # base_link gövde merkezindedir.
+  # z = base_height / 2 + mount_height / 2
+  # 0.175 + 0.02 = 0.195, görsel olarak 0.20 seçildi.
   origin:
     xyz: [0.0, 0.0, 0.20]
     rpy: [0.0, 0.0, 0.0]
@@ -252,13 +248,10 @@ lidar:
   enabled: true
   type: "cylindrical_2d_lidar"
 
-  # LiDAR silindir şeklinde temsil edilir.
   radius: 0.045
   height: 0.04
 
-  # Bu origin lidar_mount_link'e göredir.
-  # Mount yüksekliği 0.04, lidar yüksekliği 0.04 olduğu için:
-  # z = 0.02 + 0.02 = 0.04
+  # lidar_mount_link'e göredir.
   origin:
     xyz: [0.0, 0.0, 0.04]
     rpy: [0.0, 0.0, 0.0]
@@ -270,55 +263,43 @@ lidar:
     child: "lidar_link"
 
   ros:
-    # ROS2 tarafında LaserScan mesajlarının yayınlanacağı topic.
     topic: "/scan"
-
-    # LaserScan mesajlarında kullanılacak frame adı.
     frame_id: "lidar_link"
 
 materials:
   base:
-    # Gövde rengi.
     name: "base_light_gray"
     color: [0.75, 0.75, 0.75, 1.0]
 
   forklift_mast:
-    # Forklift mast kolonları.
     name: "mast_dark_gray"
     color: [0.25, 0.25, 0.25, 1.0]
 
   fork_carriage:
-    # Hareketli forklift taşıyıcı kızak.
     name: "carriage_gray"
     color: [0.35, 0.35, 0.35, 1.0]
 
   forks:
-    # Forklift bıçakları.
     name: "fork_dark_gray"
     color: [0.30, 0.30, 0.30, 1.0]
 
   wheels:
-    # Ana sürüş tekerleri.
     name: "wheel_black"
     color: [0.02, 0.02, 0.02, 1.0]
 
   caster:
-    # Caster teker.
     name: "caster_black"
     color: [0.02, 0.02, 0.02, 1.0]
 
   lidar_mount:
-    # LiDAR mount.
     name: "lidar_mount_gray"
     color: [0.20, 0.20, 0.20, 1.0]
 
   lidar:
-    # LiDAR.
     name: "lidar_blue"
     color: [0.0, 0.2, 0.8, 1.0]
 
 physics:
-  # Gazebo fizik motoru için genel temas ve sürtünme ayarları.
   default_friction:
     mu1: 1.0
     mu2: 1.0
@@ -328,9 +309,6 @@ physics:
     kd: 10.0
 
 inertial:
-  # Aşağıdaki kütle ve inertia değerleri yaklaşık başlangıç değerleridir.
-  # Gerçek robot ölçüleri kesinleşince güncellenebilir.
-
   base:
     mass: 18.0
     ixx: 0.35
@@ -406,7 +384,6 @@ inertial:
 gazebo:
   enabled: true
 
-  # Gazebo materyal isimleri.
   materials:
     base: "Gazebo/Grey"
     forklift_mast: "Gazebo/DarkGrey"
@@ -418,22 +395,17 @@ gazebo:
     lidar: "Gazebo/Blue"
 
   wheels:
-    # Ana sürüş tekerleri için yüksek sürtünme.
     friction:
       mu1: 1.2
       mu2: 1.2
 
   caster:
-    # Caster için ana tekerlerden daha düşük sürtünme.
-    # Bu, Gazebo'da robotun dönmesini kolaylaştırır.
     friction:
       mu1: 0.4
       mu2: 0.4
 
   lidar:
     enabled: true
-
-    # Gazebo lidar sensör ayarları.
     topic: "/scan"
     frame_name: "lidar_link"
     update_rate: 10.0
@@ -457,7 +429,6 @@ gazebo:
 ros2_control:
   enabled: true
 
-  # Gazebo Sim ile ros2_control kullanmak için başlangıç ayarı.
   hardware:
     name: "GazeboSystem"
     plugin: "gz_ros2_control/GazeboSimSystem"
@@ -480,15 +451,10 @@ controllers:
     enabled: true
     name: "diff_drive_controller"
 
-    # Differential drive için sol ve sağ teker joint isimleri.
     left_wheel_names: ["rear_left_wheel_joint"]
     right_wheel_names: ["rear_right_wheel_joint"]
 
-    # İki ana teker arasındaki mesafe.
-    # Sol y = +0.245, sağ y = -0.245 olduğu için toplam 0.49 m.
     wheel_separation: 0.49
-
-    # Ana teker yarıçapı.
     wheel_radius: 0.075
 
     cmd_vel_topic: "/cmd_vel"
@@ -501,12 +467,8 @@ controllers:
     enabled: true
     name: "forklift_lift_controller"
 
-    # Yukarı-aşağı hareket eden prismatic joint.
     joint: "forklift_lift_joint"
-
-    # Forklift yüksekliği position komutu ile kontrol edilir.
     command_interface: "position"
 
-    # Güvenli komut sınırları.
     min_position: 0.0
     max_position: 0.35
