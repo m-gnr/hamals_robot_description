@@ -4,6 +4,8 @@
 
 It is used to visualize the robot model in RViz, run the robot in a Gazebo Sim world, manage robot geometry from one YAML configuration file, and generate the Gazebo SDF model automatically from that YAML file.
 
+Example development paths may be `~/develop/ros2_ws` for the ROS 2 workspace and `~/develop/ros2_ws/hamals_robot_description` for this package.
+
 ## Features
 
 - HAMALS forklift-style AGV robot description
@@ -76,7 +78,7 @@ The robot structure includes the main chassis/body, left and right drive wheels,
 Install the Python dependencies from the package directory:
 
 ```bash
-cd ~/develop/ros2_ws/hamals_robot_description
+cd <path_to_hamals_robot_description>
 conda activate ros2
 pip install -r requirements.txt
 ```
@@ -92,7 +94,7 @@ PyYAML>=6.0
 Build the package from the workspace root:
 
 ```bash
-cd ~/develop/ros2_ws
+cd <your_ros2_workspace>
 rm -rf build install log
 colcon build --packages-select hamals_robot_description
 source install/setup.zsh
@@ -103,7 +105,7 @@ source install/setup.zsh
 ### RViz Visualization
 
 ```bash
-cd ~/develop/ros2_ws
+cd <your_ros2_workspace>
 source install/setup.zsh
 ros2 launch hamals_robot_description display.launch.py
 ```
@@ -113,7 +115,7 @@ RViz is used to inspect the URDF/Xacro model, TF tree, links, joints, wheels, li
 ### Gazebo Server
 
 ```bash
-cd ~/develop/ros2_ws/hamals_robot_description
+cd <path_to_hamals_robot_description>
 ./scripts/hamals_gazebo.sh server
 ```
 
@@ -122,7 +124,7 @@ This generates the Gazebo model from YAML, rebuilds the workspace, and starts th
 ### Gazebo GUI
 
 ```bash
-cd ~/develop/ros2_ws/hamals_robot_description
+cd <path_to_hamals_robot_description>
 ./scripts/hamals_gazebo.sh gui
 ```
 
@@ -131,7 +133,7 @@ This starts the Gazebo GUI with the correct model path.
 ### Update Model and Rebuild
 
 ```bash
-cd ~/develop/ros2_ws/hamals_robot_description
+cd <path_to_hamals_robot_description>
 ./scripts/hamals_gazebo.sh update
 ```
 
@@ -140,7 +142,7 @@ Use this after editing `config/robot_dimensions.yaml`.
 ### Check Robot
 
 ```bash
-cd ~/develop/ros2_ws/hamals_robot_description
+cd <path_to_hamals_robot_description>
 ./scripts/hamals_gazebo.sh check
 ```
 
@@ -149,7 +151,7 @@ This checks whether `hamals_robot` exists in the Gazebo world.
 ### Clean Gazebo Processes
 
 ```bash
-cd ~/develop/ros2_ws/hamals_robot_description
+cd <path_to_hamals_robot_description>
 ./scripts/hamals_gazebo.sh clean
 ```
 
@@ -169,7 +171,7 @@ The robot geometry workflow is:
 After changing geometry, run:
 
 ```bash
-cd ~/develop/ros2_ws/hamals_robot_description
+cd <path_to_hamals_robot_description>
 ./scripts/hamals_gazebo.sh server
 ```
 
@@ -182,14 +184,14 @@ On macOS, run the Gazebo server and GUI separately.
 Terminal 1:
 
 ```bash
-cd ~/develop/ros2_ws/hamals_robot_description
+cd <path_to_hamals_robot_description>
 ./scripts/hamals_gazebo.sh server
 ```
 
 Terminal 2:
 
 ```bash
-cd ~/develop/ros2_ws/hamals_robot_description
+cd <path_to_hamals_robot_description>
 ./scripts/hamals_gazebo.sh gui
 ```
 
