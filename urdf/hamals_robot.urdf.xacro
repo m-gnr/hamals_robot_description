@@ -9,6 +9,7 @@
   <xacro:include filename="$(find hamals_robot_description)/urdf/casters.xacro"/>
   <xacro:include filename="$(find hamals_robot_description)/urdf/lidar.xacro"/>
   <xacro:include filename="$(find hamals_robot_description)/urdf/forklift.xacro"/>
+  <xacro:include filename="$(find hamals_robot_description)/urdf/gazebo.xacro"/>
 
   <xacro:hamals_materials config="${config}"/>
   <xacro:hamals_base config="${config}"/>
@@ -16,5 +17,6 @@
   <xacro:hamals_casters config="${config}"/>
   <xacro:hamals_lidar config="${config}"/>
   <xacro:hamals_forklift config="${config}"/>
+  <xacro:hamals_gazebo config="${config}"/>
 
 </robot>

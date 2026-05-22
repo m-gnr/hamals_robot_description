@@ -208,6 +208,8 @@ forklift:
 
       limit:
         lower: 0.00
+        # Mast yüksekliği 0.35 olduğu için lift upper 0.20 ile sınırlandı.
+        # Böylece carriage/fork hareketi mast yüksekliğini aşırı geçmez.
         upper: 0.20
         effort: 100.0
         velocity: 0.15
